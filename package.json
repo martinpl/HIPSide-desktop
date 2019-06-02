@@ -1,0 +1,42 @@
+{
+	"name": "HIPSide",
+	"version": "0.0.1",
+	"homepage": "https://google.pl/",
+	"description": "TODO",
+	"author": {
+		"name": "Martin",
+		"email": "martinplr@gmail.com"
+	},
+	"main": "src/main.js",
+	"scripts": {
+		"start": "electron src/main.js",
+		"build": "build dist --win --linux",
+		"pack-win": "build --dir --win"
+	},
+	"dependencies": {
+		"discord-rich-presence": "0.0.8",
+		"mpris-service": "^2.1.0",
+		"register-scheme": "0.0.2"
+	},
+	"devDependencies": {
+		"electron": "^5.0.2",
+		"electron-builder": "^20.41.0"
+	},
+	"build": {
+		"appId": "hipside",
+		"asar": true,
+		"linux": {
+			"category": "Audio",
+			"target": [
+				"AppImage",
+				"deb",
+				"pacman"
+			]
+		},
+		"win": {
+			"target": [
+				"portable"
+			]
+		}
+	}
+}
