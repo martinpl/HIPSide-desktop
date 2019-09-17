@@ -2,7 +2,7 @@
 	"name": "HIPSide",
 	"version": "0.1.0",
 	"homepage": "https://hipside.pl",
-	"description": "TODO",
+	"description": "HIPSide for desktop",
 	"author": {
 		"name": "Martin",
 		"email": "martinplr@gmail.com"
@@ -17,7 +17,7 @@
 		"mpris-service": "^2.1.0"
 	},
 	"devDependencies": {
-		"electron": "^6.0.7",
+		"electron": "^6.0.9",
 		"electron-builder": "^21.2.0"
 	},
 	"build": {
