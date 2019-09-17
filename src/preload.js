@@ -5,6 +5,16 @@ document.addEventListener('DOMContentLoaded', function()
 	player.$watch('track', function()
 	{
 		ipcRenderer.send('updateMeta', player.track);
+
+		if(typeof notification !== 'undefined') {
+			notification.close();
+		}
+
+		notification = new Notification( player.track.album || player.track.title , {
+			icon: player.track.cover,
+			body: player.track.artist + ' - ' + player.track.title,
+		});
+
 	});
 
 	player.$watch('isPlaying', function()

@@ -10,8 +10,11 @@ const ipcMain = electron.ipcMain;
 const globalShortcut = electron.globalShortcut;
 const BrowserWindow = electron.BrowserWindow;
 
+global.baseURL = 'https://hipside.pl';
+global.contextMenu;
+global.appIcon;
+
 let mainWindow;
-let appIcon;
 let remain = true;
 
 var Player;
@@ -25,7 +28,9 @@ if ( !app.requestSingleInstanceLock() )
 }
 else
 {
-	function createMainWindow ()
+	const discord = require('./discord');
+
+	function createMainWindow()
 	{
 		mainWindow = new BrowserWindow({
 			icon: __dirname + '/assets/icon64.png',
@@ -33,16 +38,17 @@ else
 			height: 768,
 			minWidth: 340,
 			minHeight: 180,
-			setMenuBarVisibility: false,
+			backgroundColor: '#2B2B37',
 			webPreferences: {
 				preload: __dirname + '/preload.js',
 			}
 		});
 
 		mainWindow.setMenuBarVisibility(false)
-		mainWindow.loadURL('https://hipside.pl/');
+		mainWindow.loadURL(baseURL);
 
-		mainWindow.on('close', (evt) => {    											// When closing, hide it instead
+		// When closing, hide it instead
+		mainWindow.on('close', (evt) => {
 			if ( remain ) {
 				evt.preventDefault();
 				mainWindow.hide();
@@ -51,17 +57,17 @@ else
 			}
 		});
 
-		mainWindow.webContents.on('new-window', (e, url) => {							// Open link outside electron, Requires target="_blank"
+		// Open link outside electron, Requires target="_blank"
+		mainWindow.webContents.on('new-window', (e, url) => {
 			  e.preventDefault();
-			  electron.shell.openExternal(url);
+			  shell.openExternal(url);
 		});
-
 	};
 
 	function createAppIcon()
 	{
-		appIcon = new Tray(__dirname + '/assets/icon128.png');
-		var contextMenu = Menu.buildFromTemplate([
+		global.appIcon = new Tray(__dirname + '/assets/icon128.png');
+		global.contextMenu = Menu.buildFromTemplate([
 			{   label: 'Odtwórz / Pauza',
 				click: () => {
 					mainWindow.webContents.executeJavaScript("player.playPause()");
@@ -78,12 +84,21 @@ else
 				}
 			},
 			{   type: 'separator' },
+			{
+				label: 'Status Discord', 
+				type: 'checkbox', 
+				checked: true,
+				click: () => { 
+					discord.toggleDiscordStatus();
+				}
+			},
+			{   type: 'separator' },
 			{   label: 'Wyjdź',
 				click: () => {
 					remain = false;
 					app.quit();
 				}
-			},
+			}
 		]);
 		appIcon.setContextMenu(contextMenu);
 		appIcon.setToolTip('HIPSide');
@@ -94,6 +109,7 @@ else
 				mainWindow.show();
 			}
 		});
+
 	};
 
 	app.on('ready', () =>
@@ -161,9 +177,27 @@ else
 	{
 		if( os.platform() == 'linux' )
 		{
+
+			var https = require('https');
+			var fs   = require('fs');
+
+			var dir = app.getPath("temp") + '/HIPSide/';
+			if (!fs.existsSync(dir)){
+				fs.mkdirSync(dir);
+			}
+
+			var path = app.getPath("temp") + '/HIPSide/' + track.id + ".jpg";
+			if (!fs.existsSync(path))
+			{
+				var file = fs.createWriteStream(path);
+				var request = https.get( track.artwork[0].src, function(response) {
+					response.pipe(file);
+				});
+			}
+						
+
 			player.metadata = {
-				'mpris:trackid': player.objectPath('track/0'),
-				'mpris:artUrl': track.cover,
+				'mpris:artUrl': 'file://' + path,
 				'xesam:title': track.title,
 				'xesam:album': track.album,
 				'xesam:artist': [track.artist],
@@ -178,14 +212,6 @@ else
 				player.playbackStatus = 'Stopped';
 			}
 		}
-
-		const client = require('discord-rich-presence')('533674939639791638');
-		client.updatePresence({
-			details: track.title,
-			state: track.artist,
-			largeImageKey: 'main',
-			instance: true,
-		});
 
 	}
 }

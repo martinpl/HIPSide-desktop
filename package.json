@@ -1,7 +1,7 @@
 {
 	"name": "HIPSide",
-	"version": "0.0.1",
-	"homepage": "https://google.pl/",
+	"version": "0.1.0",
+	"homepage": "https://hipside.pl",
 	"description": "TODO",
 	"author": {
 		"name": "Martin",
@@ -10,17 +10,15 @@
 	"main": "src/main.js",
 	"scripts": {
 		"start": "electron src/main.js",
-		"build": "build dist --win --linux",
-		"pack-win": "build --dir --win"
+		"build": "electron-builder --win --linux"
 	},
 	"dependencies": {
 		"discord-rich-presence": "0.0.8",
-		"mpris-service": "^2.1.0",
-		"register-scheme": "0.0.2"
+		"mpris-service": "^2.1.0"
 	},
 	"devDependencies": {
-		"electron": "^5.0.2",
-		"electron-builder": "^20.41.0"
+		"electron": "^6.0.7",
+		"electron-builder": "^21.2.0"
 	},
 	"build": {
 		"appId": "hipside",
