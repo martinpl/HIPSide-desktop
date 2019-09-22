@@ -68,6 +68,16 @@ else
 	{
 		global.appIcon = new Tray(__dirname + '/assets/icon128.png');
 		global.contextMenu = Menu.buildFromTemplate([
+			{   label: 'Pokaż / Ukryj',
+				click: () => {
+					if (mainWindow.isVisible()) {
+						mainWindow.hide();
+					} else {
+						mainWindow.show();
+					}
+				}
+			},
+			{   type: 'separator' },
 			{   label: 'Odtwórz / Pauza',
 				click: () => {
 					mainWindow.webContents.executeJavaScript("player.playPause()");
