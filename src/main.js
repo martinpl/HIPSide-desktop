@@ -197,21 +197,21 @@ else
 			}
 
 			var path = app.getPath("temp") + '/HIPSide/' + track.id + ".jpg";
-			if (!fs.existsSync(path))
-			{
-				var file = fs.createWriteStream(path);
-				var request = https.get( track.artwork[0].src, function(response) {
-					response.pipe(file);
-				});
-			}
-						
 
-			player.metadata = {
-				'mpris:artUrl': 'file://' + path,
-				'xesam:title': track.title,
-				'xesam:album': track.album,
-				'xesam:artist': [track.artist],
-			};
+			var file = fs.createWriteStream(path);
+			var request = https.get( track.artwork[0].src, function(response) {
+				var stream = response.pipe(file);
+			
+				stream.on('finish', function () { 
+					player.metadata = {
+						'mpris:artUrl': 'file://' + path,
+						'xesam:title': track.title,
+						'xesam:album': track.album,
+						'xesam:artist': [track.artist],
+					};
+
+				});
+			});
 
 			if( status == true )
 			{
