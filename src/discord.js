@@ -6,8 +6,6 @@ const ipcMain = electron.ipcMain;
 const discordRichPresenceClient = require('discord-rich-presence')('533674939639791638');
 var discordRichPresence = true;
 
-var status; // do usuniecia
-
 
 app.on('ready', () =>
 {
