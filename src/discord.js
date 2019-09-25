@@ -78,7 +78,7 @@ function setDiscordStatus()
 	.then((cookies) => {
 		if(cookies[0].value == "false") { 
             discordRichPresence = false;
-            contextMenu.items[4].checked = discordRichPresence;
+            contextMenu.items[6].checked = discordRichPresence;
 			appIcon.setContextMenu(contextMenu);
 		}
 	})
